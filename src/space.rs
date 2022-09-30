@@ -11,6 +11,16 @@ impl Space {
     pub fn is_empty(&self) -> bool {
         self.dims.len() == 0
     }
+
+    /// If any of the keys in `map` are not in `self.dims`, an error is thrown.
+    pub fn rename_dims(&mut self, map: HashMap<String, String>) {
+        let mut dims = self.dims.clone();
+        for (old, new) in map.into_iter() {
+            let d = dims.remove(&old).unwrap();
+            dims.insert(new, d);
+        }
+        self.dims = dims;
+    }
 }
 
 impl Mul for Space {

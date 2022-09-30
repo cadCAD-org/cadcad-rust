@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test {
     use rstest::*;
-    use std::collections::HashMap;
+    use std::collections::{HashMap, HashSet};
 
     use cadcad_rust::space::Space;
     use cadcad_rust::dimension::Dimension;
@@ -71,5 +71,17 @@ mod test {
     fn test_is_empty(space_1: Space, empty_space: Space) {
         assert!(!space_1.is_empty());
         assert!(empty_space.is_empty());
+    }
+
+    #[rstest]
+    fn test_rename_dims(mut space_1: Space) {
+        space_1.rename_dims(
+            HashMap::from([
+                (String::from("d_1"), String::from("new_name"))
+            ])
+        );
+        let expected_new_dims = HashSet::from([String::from("new_name"), String::from("d_2")]);
+        let new_dims = space_1.dims.keys().cloned().collect::<HashSet<String>>();
+        assert_eq!(new_dims, expected_new_dims);
     }
 }
