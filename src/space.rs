@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Mul};
+use std::{collections::HashMap, ops::{Mul, Add}};
 use crate::dimension::Dimension;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -18,5 +18,16 @@ impl Mul for Space {
                 (String::from(&rhs.name), Dimension::Space(rhs)),
             ])
         }
+    }
+}
+
+impl Add for Space {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let name = format!("{} + {}", &self.name, &rhs.name);
+        let mut dims = self.dims;
+        dims.extend(rhs.dims);
+        Space { name, dims }
     }
 }

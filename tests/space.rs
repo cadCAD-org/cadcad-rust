@@ -46,4 +46,16 @@ mod test {
         assert!(space_3.dims.eq(&space_4.dims));
         assert_eq!(space_3.dims.len() as u8, 2);
     }
+
+    #[rstest]
+    fn test_merge_product(space_1: Space, space_2: Space) {
+        let space_3 = space_1.clone() + space_2.clone();  // Clone necessary due to borrow rules.
+        let space_4 = space_2.clone() + space_1.clone();  // Clone necessary due to borrow rules.
+        assert!(space_3.dims.eq(&space_4.dims));
+
+        let mut expected_merged_dims = HashMap::<String, Dimension>::new();
+        expected_merged_dims.extend(space_1.dims);
+        expected_merged_dims.extend(space_2.dims);
+        assert!(space_3.dims.eq(&expected_merged_dims));
+    }
 }
