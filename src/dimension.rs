@@ -2,7 +2,17 @@ use crate::space::Space;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Dimension {
-    Integer(i64),
-    Real(f64),
+    Integer { loc: i32 },
+    Real { loc: f64 },
     Space(Space)
+}
+
+impl Dimension {
+    pub fn update(&self, dim: Dimension) -> Dimension {
+        match dim {
+            Dimension::Integer { loc: x } => Dimension::Integer { loc: x },
+            Dimension::Real { loc: x } => Dimension::Real { loc: x },
+            Dimension::Space(spc) => Dimension::Space(spc)
+        }
+    }
 }
