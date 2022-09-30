@@ -28,6 +28,14 @@ mod test {
         }
     }
 
+    #[fixture]
+    fn empty_space() -> Space {
+        Space {
+            name: String::from("space_2"),
+            dims: HashMap::new()
+        }
+    }
+
     #[rstest]
     fn test_nest_spaces(space_1: Space, space_2: Space) {
         Space {
@@ -57,5 +65,11 @@ mod test {
         expected_merged_dims.extend(space_1.dims);
         expected_merged_dims.extend(space_2.dims);
         assert!(space_3.dims.eq(&expected_merged_dims));
+    }
+
+    #[rstest]
+    fn test_is_empty(space_1: Space, empty_space: Space) {
+        assert!(!space_1.is_empty());
+        assert!(empty_space.is_empty());
     }
 }

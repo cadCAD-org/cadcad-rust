@@ -7,6 +7,12 @@ pub struct Space {
     pub dims: HashMap<String, Dimension>
 }
 
+impl Space {
+    pub fn is_empty(&self) -> bool {
+        self.dims.len() == 0
+    }
+}
+
 impl Mul for Space {
     type Output = Self;
 
