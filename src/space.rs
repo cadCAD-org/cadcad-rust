@@ -39,8 +39,8 @@ impl Space {
     }
 
     pub fn update_dims(&mut self, dims: HashMap<String, Dimension>) {
-        for (name, new) in dims.into_iter() {
-            self.update_dim(name, new);
+        for (name, dim) in dims.into_iter() {
+            self.update_dim(name, dim);
         }
     }
 }
