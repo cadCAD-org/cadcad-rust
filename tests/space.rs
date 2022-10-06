@@ -52,7 +52,7 @@ mod test {
     fn test_cartesian_product(space_1: Space, space_2: Space) {
         let space_3 = space_1.clone() * space_2.clone();  // Clone necessary due to borrow rules.
         let space_4 = space_2 * space_1;
-        assert!(space_3.dims().eq(&space_4.dims()));
+        assert_eq!(space_3.dims(), space_4.dims());
         assert_eq!(space_3.dims().len(), 2);
     }
 
