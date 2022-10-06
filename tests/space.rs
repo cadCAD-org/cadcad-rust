@@ -92,7 +92,7 @@ mod test {
 
     #[rstest]
     fn test_repeated_merge_product(space_1: Space) {
-        let space_2 = space_1.clone().pow(3);
+        let space_2 = space_1.clone().pow(3);  // Clone necessary due to borrow rules.
         let actual_keys = space_2.dims().keys().map(|k| k.as_str()).collect::<HashSet<&str>>();
         let expect_keys = HashSet::from(["space_1_0", "space_1_1", "space_1_2"]);
         assert_eq!(space_2.name(), "space_1 * space_1 * space_1");
@@ -115,8 +115,8 @@ mod test {
                 (String::from("d_1"), String::from("new_name"))
             ])
         );
-        let expected_new_dims = HashSet::from([String::from("new_name"), String::from("d_2")]);
-        let new_dims = space_1.dims().keys().cloned().collect::<HashSet<String>>();
-        assert_eq!(new_dims, expected_new_dims);
+        let expect_dims = HashSet::from(["new_name", "d_2"]);
+        let actual_dims = space_1.dims().keys().map(|k| k.as_str()).collect::<HashSet<&str>>();
+        assert_eq!(actual_dims, expect_dims);
     }
 }
