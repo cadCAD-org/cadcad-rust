@@ -1,9 +1,11 @@
 use std::{collections::HashMap, ops::{Mul, Add}};
 use counter::Counter;
 use num_traits::pow::Pow;
+use serde::Serialize;
+use serde_json::{json, to_string_pretty};
 use crate::dimension::Dimension;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Space {
     name: String,
     dims: HashMap<String, Dimension>
@@ -44,6 +46,10 @@ impl Space {
         for (name, dim) in dims.into_iter() {
             self.update_dim(name, dim);
         }
+    }
+
+    pub fn unroll_schema(&self) -> String {
+        to_string_pretty(&json!(self.dims().clone())).expect("Could not unroll schema")
     }
 }
 

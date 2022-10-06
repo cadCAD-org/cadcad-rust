@@ -1,6 +1,8 @@
+use serde::Serialize;
+
 use crate::space::Space;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum Dimension {
     Integer { loc: i32 },
     Real { loc: f64 },

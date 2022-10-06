@@ -119,4 +119,23 @@ mod test {
         let actual_dims = space_1.dims().keys().map(|k| k.as_str()).collect::<HashSet<&str>>();
         assert_eq!(actual_dims, expect_dims);
     }
+
+    #[rstest]
+    fn test_unroll_schema(space_1: Space) {
+        let actual_schema = space_1.unroll_schema();
+        let expect_schema =
+r#"{
+  "d_1": {
+    "Integer": {
+      "loc": 1
+    }
+  },
+  "d_2": {
+    "Real": {
+      "loc": 1.0
+    }
+  }
+}"#;
+        assert_eq!(actual_schema, expect_schema);
+    }
 }
