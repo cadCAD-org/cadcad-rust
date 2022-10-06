@@ -1,4 +1,6 @@
 use std::{collections::HashMap, ops::{Mul, Add}};
+use counter::Counter;
+use num_traits::pow::Pow;
 use crate::dimension::Dimension;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -49,11 +51,18 @@ impl Mul for Space {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
+        let name = format!("{} * {}", &self.name, &rhs.name);
+        let mut name_lhs = self.name.clone();
+        let mut name_rhs = rhs.name.clone();
+        if name_lhs == name_rhs {
+            name_lhs.push_str("_0");
+            name_rhs.push_str("_1");
+        }
         Space {
-            name: format!("{} * {}", &self.name, &rhs.name),
+            name,
             dims: HashMap::from([
-                (String::from(&self.name), Dimension::Space(self)),
-                (String::from(&rhs.name), Dimension::Space(rhs)),
+                (name_lhs, Dimension::Space(self)),
+                (name_rhs, Dimension::Space(rhs))
             ])
         }
     }
@@ -63,9 +72,38 @@ impl Add for Space {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let name = format!("{} + {}", &self.name, &rhs.name);
-        let mut dims = self.dims;
-        dims.extend(rhs.dims);
-        Space { name, dims }
+        let dims_lhs = &self.dims;
+        let dims_rhs = &rhs.dims;
+        let counts = dims_lhs.iter().chain(dims_rhs.iter()).map(|(name, _dim)| name).collect::<Counter<_>>();
+        let mut new = HashMap::<String, Dimension>::new();
+        for (old, suffix) in [dims_lhs, dims_rhs].iter().zip(["_0", "_1"]) {
+            for (name, dim) in old.iter() {
+                let mut name = name.clone();
+                if counts[&name] == 2 {
+                    name.push_str(suffix)
+                }
+                new.insert(name, dim.clone());
+            }
+        }
+        Space { name: format!("{} + {}", &self.name, &rhs.name), dims: new }
+    }
+}
+
+impl Pow<u8> for Space {
+    type Output = Self;
+
+    fn pow(self, rhs: u8) -> Self::Output {
+        if rhs > 1 {
+            let mut name = self.name.clone();
+            let mut dims = HashMap::from([
+                (format!("{}_0", name), Dimension::Space(self.clone()))
+            ]);
+            for i in 1..rhs {
+                name.push_str(format!(" * {}", &self.name).as_str());
+                dims.insert(format!("{}_{}", &self.name, i), Dimension::Space(self.clone()));
+            }
+            return Space { name, dims }
+        }
+        self
     }
 }
