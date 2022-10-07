@@ -72,7 +72,14 @@ mod test {
         assert_eq!(actual_keys, expect_keys);
         let space_4 = space_2 * space_1;
         assert_eq!(space_3.dims(), space_4.dims());
-        assert_eq!(space_3.dims().len(), 2);
+    }
+
+    #[rstest]
+    fn test_cartesian_product_with_overlapping_dims(space_1: Space) {
+        let space_2 = space_1.clone() * space_1.clone();  // Clone necessary due to borrow rules.
+        let actual_keys = space_2.dims().keys().map(|k| k.as_str()).collect::<HashSet<&str>>();
+        let expect_keys = HashSet::from(["space_1_0", "space_1_1"]);
+        assert_eq!(actual_keys, expect_keys);
     }
 
     #[rstest]
