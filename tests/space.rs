@@ -38,6 +38,22 @@ mod test {
     }
 
     #[rstest]
+    fn test_name(space_1: Space) {
+        assert_eq!(space_1.name().as_str(), "space_1")
+    }
+
+    #[rstest]
+    fn test_dims(space_1: Space) {
+        assert_eq!(
+            space_1.dims(),
+            &HashMap::from([
+                (String::from("d_1"), Dimension::Integer { loc: 1 }),
+                (String::from("d_2"), Dimension::Real { loc: 1. }),
+            ])
+        )
+    }
+
+    #[rstest]
     fn test_nest_spaces(space_1: Space, space_2: Space) {
         Space::new(
             String::from("space_3"),
